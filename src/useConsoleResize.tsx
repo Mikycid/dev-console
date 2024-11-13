@@ -1,5 +1,4 @@
 import React from 'react';
-// useConsoleResize.tsx
 import { useState, useRef } from 'react';
 
 interface Size {
@@ -37,7 +36,6 @@ export const useConsoleResize = (disableResize?: boolean) => {
         const newSize = { ...size };
         const newPosition = { ...position };
 
-        // Handle horizontal resize
         if (resizeDirection === 'e') {
             newSize.width = Math.max(300, resizeStartRef.current.width + deltaX);
         } else if (resizeDirection === 'w') {
@@ -48,7 +46,6 @@ export const useConsoleResize = (disableResize?: boolean) => {
             }
         }
 
-        // Handle vertical resize
         if (resizeDirection === 's') {
             newSize.height = Math.max(200, resizeStartRef.current.height + deltaY);
         } else if (resizeDirection === 'n') {
@@ -59,7 +56,6 @@ export const useConsoleResize = (disableResize?: boolean) => {
             }
         }
 
-        // Handle corner resize
         if (resizeDirection === 'se') {
             newSize.width = Math.max(300, resizeStartRef.current.width + deltaX);
             newSize.height = Math.max(200, resizeStartRef.current.height + deltaY);

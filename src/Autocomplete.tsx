@@ -1,3 +1,4 @@
+import React from 'react';
 import { useEffect, useState, KeyboardEvent } from "react";
 
 interface AutocompleteProps {

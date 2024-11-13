@@ -1,3 +1,4 @@
+import React from 'react';
 // useConsoleResize.tsx
 import { useState, useRef } from 'react';
 

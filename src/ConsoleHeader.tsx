@@ -1,9 +1,10 @@
+import React from 'react';
 interface ConsoleHeaderProps {
     onToggleMove: () => void;
     isMoveLocked: boolean;
     disableMove?: boolean;
     onMouseDown: (e: React.MouseEvent) => void;
-    isDragging: boolean;  // Add this prop
+    isDragging: boolean;
 }
 
 export const ConsoleHeader: React.FC<ConsoleHeaderProps> = ({

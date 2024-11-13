@@ -1,5 +1,5 @@
 {
-  "name": "dev-console",
+  "name": "@mikycid/dev-console",
   "version": "1.0.0",
   "description": "A draggable and resizable developer console component for React applications.",
   "main": "dist/index.js",

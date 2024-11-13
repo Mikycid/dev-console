@@ -43,24 +43,6 @@ const App = () => {
 | `defaultLogLevel` | `LogLevel` | `LogLevel.INFO` | Default log level for filtering console output |
 | `showLogControls` | `boolean` | `true` | Show/hide log level control buttons |
 
-### Module Interface
-```typescript
-interface Module {
-    name: string;
-    description: string;
-    commands: Command[];
-}
-```
-
-### LogLevel Type
-```typescript
-enum LogLevel {
-    ERROR = 'error',
-    WARN = 'warn',
-    INFO = 'info',
-    DEBUG = 'debug'
-}
-```
 
 ## Development
 
@@ -99,10 +81,10 @@ This will launch a development environment at http://localhost:3000 with hot rel
 ```
 dev-console/
 ├── src/               # Source code
-│   ├── components/    # React components
-│   ├── hooks/        # Custom hooks
-│   ├── interfaces/   # TypeScript interfaces
-│   └── types/        # TypeScript types
+│   ├── Interfaces/   # TypeScript interfaces
+│   ├── Types/        # TypeScript types
+│   ├── Modules/      # To be implemented
+│   ├── tests/   # TypeScript interfaces
 ├── playground/        # Development environment
 └── example/          # Usage examples
 ```

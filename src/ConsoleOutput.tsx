@@ -1,3 +1,4 @@
+import React from 'react';
 import { LogEntry } from "./Types/LogEntry";
 
 interface ConsoleOutputProps {

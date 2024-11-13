@@ -3,20 +3,25 @@ import commonjs from '@rollup/plugin-commonjs';
 import typescript from '@rollup/plugin-typescript';
 import postcss from 'rollup-plugin-postcss';
 import peerDepsExternal from 'rollup-plugin-peer-deps-external';
+import { readFileSync } from 'fs';
+
+const packageJson = JSON.parse(readFileSync('./package.json', 'utf8'));
 
 export default {
   input: 'src/index.ts',
   output: [
     {
-      file: 'dist/index.js',
+      file: packageJson.main,
       format: 'cjs',
       sourcemap: true,
+      exports: 'auto'
     },
     {
-      file: 'dist/index.esm.js',
+      file: packageJson.module,
       format: 'esm',
       sourcemap: true,
-    },
+      exports: 'auto'
+    }
   ],
   plugins: [
     peerDepsExternal(),
@@ -26,9 +31,18 @@ export default {
       tsconfig: './tsconfig.json',
       declaration: true,
       declarationDir: 'dist',
+      exclude: ['playground/**/*']
     }),
     postcss({
-      modules: true,
+      config: {
+        path: './postcss.config.js',
+      },
+      extensions: ['.css'],
+      minimize: true,
+      inject: {
+        insertAt: 'top',
+      },
     }),
   ],
+  external: ['react', 'react-dom']
 };

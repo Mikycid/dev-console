@@ -1,3 +1,4 @@
+import React from 'react';
 import { useEffect, useRef } from 'react';
 import { LogLevel } from './Types/LogLevel';
 
@@ -37,7 +38,6 @@ export const useConsoleInterceptor = (
         const interceptConsole = (type: LogType) => {
             const original = originalConsole[type];
             console[type] = (...args: any[]) => {
-                // Call original first to maintain proper console output order
                 original.apply(console, args);
 
                 const formattedMessage = args.map(arg => 
@@ -58,7 +58,6 @@ export const useConsoleInterceptor = (
         (Object.keys(originalConsole) as LogType[]).forEach(interceptConsole);
         isInterceptorSet.current = true;
 
-        // Cleanup function
         return () => {
             Object.entries(originalConsole).forEach(([key, value]) => {
                 console[key as LogType] = value;

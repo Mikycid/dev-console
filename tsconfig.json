@@ -1,20 +1,25 @@
 {
     "compilerOptions": {
-      "target": "es5",
-      "module": "esnext",
-      "lib": ["dom", "dom.iterable", "esnext"],
+      "target": "ES2021",
+      "module": "ESNext",
+      "lib": ["DOM", "ESNext"],
+      "jsx": "react",
       "declaration": true,
       "declarationDir": "dist",
-      "jsx": "react",
+      "sourceMap": true,
+      "outDir": "./dist",
       "strict": true,
       "moduleResolution": "node",
       "allowSyntheticDefaultImports": true,
       "esModuleInterop": true,
-      "skipLibCheck": true,
       "forceConsistentCasingInFileNames": true,
-      "outDir": "dist",
-      "rootDir": "src"
+      "resolveJsonModule": true
+    },
+    "ts-node": {
+      "compilerOptions": {
+        "module": "commonjs"
+      }
     },
     "include": ["src"],
-    "exclude": ["node_modules", "dist"]
-  }
+    "exclude": ["node_modules", "dist", "playground", "src/tests"]
+}

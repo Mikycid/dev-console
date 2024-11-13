@@ -58,14 +58,12 @@ export const executeCommand = (input: string, addOutput: (message: string) => vo
     }
 };
 
-// Function to show global help
 export const showGlobalHelp = (addOutput: (message: string) => void) => {
     addOutput("Available modules:");
     Object.keys(modules).forEach((moduleName) => addOutput(`- ${moduleName}`));
     addOutput(`Use /[module]/help for module details`);
 };
 
-// Initialize commands for modules
 export const initializeModules = (modules: Module[]) => {
     modules.forEach((module) => {
         registerModule(module.name, module);

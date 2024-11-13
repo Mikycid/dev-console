@@ -1,9 +1,10 @@
+import React from 'react';
 interface ConsoleHeaderProps {
     onToggleMove: () => void;
     isMoveLocked: boolean;
     disableMove?: boolean;
     onMouseDown: (e: React.MouseEvent) => void;
-    isDragging: boolean;  // Add this prop
+    isDragging: boolean;
 }
 
 export const ConsoleHeader: React.FC<ConsoleHeaderProps> = ({
@@ -12,7 +13,7 @@ export const ConsoleHeader: React.FC<ConsoleHeaderProps> = ({
     disableMove,
     onMouseDown,
     isDragging
-}) => (
+}: ConsoleHeaderProps) => (
     <div 
         className="flex items-center justify-between bg-gray-800 px-3 py-2 border-b border-gray-700 select-none"
         onMouseDown={onMouseDown}

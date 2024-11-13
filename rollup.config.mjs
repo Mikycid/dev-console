@@ -11,24 +11,38 @@ export default {
       file: 'dist/index.js',
       format: 'cjs',
       sourcemap: true,
+      exports: 'auto'
     },
     {
       file: 'dist/index.esm.js',
       format: 'esm',
       sourcemap: true,
-    },
+      exports: 'auto'
+    }
   ],
   plugins: [
     peerDepsExternal(),
     resolve(),
     commonjs(),
     typescript({
-      tsconfig: './tsconfig.json',
+      tsconfig: 'tsconfig.json',
       declaration: true,
       declarationDir: 'dist',
+      exclude: [
+        'playground/**/*',
+        'src/test/**/*'
+      ]
     }),
     postcss({
-      modules: true,
+      config: {
+        path: './postcss.config.js',
+      },
+      extensions: ['.css'],
+      minimize: true,
+      extract: 'styles.css',
+      inject: true,
+      use: ['sass'],
     }),
   ],
+  external: ['react', 'react-dom']
 };

@@ -1,3 +1,4 @@
+import React from 'react';
 import { LogEntry } from "./Types/LogEntry";
 
 interface ConsoleOutputProps {
@@ -10,7 +11,7 @@ export const ConsoleOutput: React.FC<ConsoleOutputProps> = ({
     logs,
     height,
     outputRef
-}) => {
+}: ConsoleOutputProps) => {
     const getLogIcon = (type: LogEntry['type']) => {
         switch(type) {
             case 'error': return '🔴';

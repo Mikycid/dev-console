@@ -1,55 +1,83 @@
 {
-    "name": "react-dev-console",
-    "version": "1.0.0",
-    "description": "A draggable and resizable developer console component for React applications",
-    "main": "dist/index.js",
-    "module": "dist/index.esm.js",
-    "types": "dist/index.d.ts",
-    "files": [
-      "dist"
-    ],
-    "scripts": {
-      "build": "rollup -c",
-      "test": "jest",
-      "lint": "eslint src/**/*.{ts,tsx}",
-      "prepare": "npm run build",
-      "prepublishOnly": "npm test && npm run lint",
-      "clean": "rimraf dist"
-    },
-    "repository": {
-      "type": "git",
-      "url": "git+https://github.com/mikycid/dev-console.git"
-    },
-    "keywords": [
-      "react",
-      "console",
-      "developer",
-      "debug",
-      "logging"
-    ],
-    "author": "Your Name",
-    "license": "MIT",
-    "peerDependencies": {
-      "react": ">=16.8.0",
-      "react-dom": ">=16.8.0"
-    },
-    "devDependencies": {
-      "@rollup/plugin-commonjs": "^21.0.1",
-      "@rollup/plugin-node-resolve": "^13.0.6",
-      "@rollup/plugin-typescript": "^8.3.0",
-      "@types/react": "^17.0.0",
-      "@types/react-dom": "^17.0.0",
-      "@typescript-eslint/eslint-plugin": "^5.0.0",
-      "@typescript-eslint/parser": "^5.0.0",
-      "eslint": "^8.0.0",
-      "eslint-plugin-react": "^7.26.1",
-      "eslint-plugin-react-hooks": "^4.2.0",
-      "jest": "^27.3.1",
-      "rimraf": "^3.0.2",
-      "rollup": "^2.58.0",
-      "rollup-plugin-peer-deps-external": "^2.2.4",
-      "rollup-plugin-postcss": "^4.0.1",
-      "typescript": "^4.4.4"
+  "name": "dev-console",
+  "version": "1.0.0",
+  "description": "A draggable and resizable developer console component for React applications.",
+  "main": "dist/index.js",
+  "type": "module",
+  "module": "dist/index.esm.js",
+  "scripts": {
+    "test": "jest",
+    "start": "vite serve playground --open",
+    "build": "rimraf dist && rollup -c rollup.config.mjs",
+    "prepare": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mikycid/dev-console.git"
+  },
+  "author": "Mike LE PAVEC",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Mikycid/dev-console/issues"
+  },
+  "homepage": "https://github.com/Mikycid/dev-console#readme",
+  "dependencies": {
+    "tslib": "^2.8.1"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^28.0.1",
+    "@rollup/plugin-node-resolve": "^15.3.0",
+    "@rollup/plugin-typescript": "^12.1.1",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/github": "^11.0.1",
+    "@semantic-release/npm": "^12.0.1",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.0.1",
+    "@types/jest": "^29.5.14",
+    "@types/react": "^18.3.12",
+    "@vitejs/plugin-react": "^4.3.3",
+    "autoprefixer": "^10.4.20",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "postcss": "^8.4.49",
+    "rimraf": "^6.0.1",
+    "rollup": "^4.26.0",
+    "rollup-plugin-peer-deps-external": "^2.2.4",
+    "rollup-plugin-postcss": "^4.0.2",
+    "semantic-release": "^24.2.0",
+    "tailwindcss": "^3.4.14",
+    "ts-jest": "^29.2.5",
+    "typescript": "^5.6.3",
+    "vite": "^5.4.11"
+  },
+  "files": [
+    "dist/",
+    "dist/index.js",
+    "dist/index.esm.js",
+    "dist/index.d.ts",
+    "dist/**/*.d.ts",
+    "LICENSE",
+    "README.md"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/index.esm.js",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "peerDependencies": {
+    "react": ">=16.8.0",
+    "react-dom": ">=16.8.0",
+    "tailwindcss": "^3.3.0"
+  },
+  "peerDependenciesMeta": {
+    "tailwindcss": {
+      "optional": true
     }
   }
-  
+}

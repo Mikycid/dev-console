@@ -1,7 +1,6 @@
-// DevConsole.tsx
-import React, { useState, useEffect, useRef } from 'react';
+import React from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { executeCommand, initializeModules } from './Modules/commandRegistry';
-import { Module } from './Interfaces/Module';
 import { ConsoleHeader } from './ConsoleHeader';
 import { ConsoleOutput } from './ConsoleOutput';
 import { ConsoleInput } from './ConsoleInput';
@@ -11,9 +10,10 @@ import { ConsoleControls } from './ConsoleControls';
 import { useConsoleHistory } from './useConsoleHistory';
 import { useConsoleDrag } from './useConsoleDrag';
 import { useConsoleResize } from './useConsoleResize';
+import { Module } from './Interfaces/Module';
 
 interface DevConsoleProps {
-    modules: Module[];
+    modules?: Module[];
     disableMove?: boolean;
     disableResize?: boolean;
     defaultLogLevel?: LogLevel;
@@ -39,23 +39,20 @@ const LOG_TYPE_TO_LEVEL: Record<LogType, LogLevel> = {
 
 
 export const DevConsole: React.FC<DevConsoleProps> = ({
-    modules,
+    modules = [],
     disableMove = false,
     disableResize = false,
     defaultLogLevel = LogLevel.INFO,
     showLogControls = true
 }) => {
-    // Refs
     const consoleRef = useRef<HTMLDivElement>(null);
     const outputRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
 
-    // State for input handling
     const [input, setInput] = useState('');
     const [isFocused, setIsFocused] = useState(false);
     const [isAutocompleteVisible, setIsAutocompleteVisible] = useState(false);
 
-    // State for log management
     const [allLogs, setAllLogs] = useState<LogEntry[]>([]);
     const [filteredLogs, setFilteredLogs] = useState<LogEntry[]>([]);
     const [minimumLogLevel, setMinimumLogLevel] = useState<LogLevel>(defaultLogLevel);
@@ -66,17 +63,24 @@ export const DevConsole: React.FC<DevConsoleProps> = ({
         [LogLevel.ERROR]: true
     });
 
-    // Custom hooks
     const resize = useConsoleResize(disableResize);
     const drag = useConsoleDrag(consoleRef, disableMove);
     const { history, addToHistory, navigateHistory } = useConsoleHistory();
 
-    // Initialize modules
+    useEffect(() => {
+        if (!document.getElementById('tailwind-cdn')) {
+          const script = document.createElement('script');
+          script.src = 'https://cdn.tailwindcss.com';
+          script.id = 'tailwind-cdn';
+          document.head.appendChild(script);
+        }
+      }, []);
+    
+
     useEffect(() => {
         initializeModules(modules);
     }, [modules]);
 
-    // Filter logs when log levels or minimumLogLevel changes
     useEffect(() => {
         const filtered = allLogs.filter(log => {
             const logLevel = LOG_TYPE_TO_LEVEL[log.type];
@@ -85,7 +89,6 @@ export const DevConsole: React.FC<DevConsoleProps> = ({
         setFilteredLogs(filtered);
     }, [allLogs, minimumLogLevel, enabledLevels]);
 
-    // Console interceptor
     useEffect(() => {
         const originalConsole = {
             log: console.log,
@@ -123,14 +126,12 @@ export const DevConsole: React.FC<DevConsoleProps> = ({
         };
     }, []);
 
-    // Scroll to bottom when filtered logs update
     useEffect(() => {
         if (outputRef.current) {
             outputRef.current.scrollTop = outputRef.current.scrollHeight;
         }
     }, [filteredLogs]);
 
-    // Prevent text selection during resize
     useEffect(() => {
         if (resize.isResizing) {
             document.body.style.userSelect = 'none';
@@ -149,7 +150,6 @@ export const DevConsole: React.FC<DevConsoleProps> = ({
         };
     }, [resize.isResizing, resize.resizeDirection]);
 
-    // Mouse event handling
     useEffect(() => {
         const handleMouseMove = (e: MouseEvent) => {
             if (drag.isDragging && !drag.isMoveLocked && !disableMove) {
@@ -182,13 +182,11 @@ export const DevConsole: React.FC<DevConsoleProps> = ({
     };
 
     const handleKeyDown = async (event: React.KeyboardEvent<HTMLInputElement>) => {
-        // Handle Escape
         if (event.key === 'Escape' && isAutocompleteVisible) {
             setIsAutocompleteVisible(false);
             return;
         }
 
-        // Handle history navigation
         if (!isAutocompleteVisible && (event.key === 'ArrowUp' || event.key === 'ArrowDown')) {
             event.preventDefault();
             const direction = event.key === 'ArrowUp' ? 'up' : 'down';
@@ -197,7 +195,6 @@ export const DevConsole: React.FC<DevConsoleProps> = ({
             return;
         }
 
-        // Handle command execution
         if (event.key === 'Enter' && input.trim()) {
             const trimmedInput = input.trim();
             addToHistory(trimmedInput);
@@ -234,7 +231,6 @@ export const DevConsole: React.FC<DevConsoleProps> = ({
         setInput(parts.length <= 2 ? `/${suggestion}/` : parts.slice(0, -1).concat(suggestion).join('/'));
     };
 
-    // Calculate container height based on controls visibility
     const containerHeight = resize.size.height - (showLogControls ? 144 : 108);
 
     return (
@@ -272,7 +268,7 @@ export const DevConsole: React.FC<DevConsoleProps> = ({
                     minimumLogLevel={minimumLogLevel}
                     onLogLevelChange={setMinimumLogLevel}
                     enabledLevels={enabledLevels}
-                    onToggleLevel={(level) => setEnabledLevels(prev => ({
+                    onToggleLevel={(level: LogLevel) => setEnabledLevels(prev => ({
                         ...prev,
                         [level]: !prev[level]
                     }))}
@@ -285,6 +281,7 @@ export const DevConsole: React.FC<DevConsoleProps> = ({
                     height={containerHeight}
                     outputRef={outputRef}
                 />
+                {modules.length > 0 && 
                 <ConsoleInput
                     input={input}
                     isFocused={isFocused}
@@ -298,7 +295,7 @@ export const DevConsole: React.FC<DevConsoleProps> = ({
                     onBlur={() => setTimeout(() => setIsFocused(false), 200)}
                     onAutocompleteSelect={handleAutocompleteSelect}
                     onAutocompleteEscape={() => setIsAutocompleteVisible(false)}
-                />
+                /> }
             </div>
         </div>
     );

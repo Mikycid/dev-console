@@ -30,7 +30,7 @@ export const ConsoleInput: React.FC<ConsoleInputProps> = ({
     onBlur,
     onAutocompleteSelect,
     onAutocompleteEscape
-}) => (
+}: ConsoleInputProps) => (
     <div className="input flex items-center p-3">
         <span className="mr-2">&gt;</span>
         <input

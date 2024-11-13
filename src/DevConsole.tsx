@@ -1,7 +1,6 @@
 import React from 'react';
 import { useState, useEffect, useRef } from 'react';
 import { executeCommand, initializeModules } from './Modules/commandRegistry';
-import { Module } from './Interfaces/Module';
 import { ConsoleHeader } from './ConsoleHeader';
 import { ConsoleOutput } from './ConsoleOutput';
 import { ConsoleInput } from './ConsoleInput';
@@ -11,9 +10,10 @@ import { ConsoleControls } from './ConsoleControls';
 import { useConsoleHistory } from './useConsoleHistory';
 import { useConsoleDrag } from './useConsoleDrag';
 import { useConsoleResize } from './useConsoleResize';
+import { Module } from './Interfaces/Module';
 
 interface DevConsoleProps {
-    modules: Module[];
+    modules?: Module[];
     disableMove?: boolean;
     disableResize?: boolean;
     defaultLogLevel?: LogLevel;
@@ -39,7 +39,7 @@ const LOG_TYPE_TO_LEVEL: Record<LogType, LogLevel> = {
 
 
 export const DevConsole: React.FC<DevConsoleProps> = ({
-    modules,
+    modules = [],
     disableMove = false,
     disableResize = false,
     defaultLogLevel = LogLevel.INFO,
@@ -66,6 +66,16 @@ export const DevConsole: React.FC<DevConsoleProps> = ({
     const resize = useConsoleResize(disableResize);
     const drag = useConsoleDrag(consoleRef, disableMove);
     const { history, addToHistory, navigateHistory } = useConsoleHistory();
+
+    useEffect(() => {
+        if (!document.getElementById('tailwind-cdn')) {
+          const script = document.createElement('script');
+          script.src = 'https://cdn.tailwindcss.com';
+          script.id = 'tailwind-cdn';
+          document.head.appendChild(script);
+        }
+      }, []);
+    
 
     useEffect(() => {
         initializeModules(modules);
@@ -258,7 +268,7 @@ export const DevConsole: React.FC<DevConsoleProps> = ({
                     minimumLogLevel={minimumLogLevel}
                     onLogLevelChange={setMinimumLogLevel}
                     enabledLevels={enabledLevels}
-                    onToggleLevel={(level) => setEnabledLevels(prev => ({
+                    onToggleLevel={(level: LogLevel) => setEnabledLevels(prev => ({
                         ...prev,
                         [level]: !prev[level]
                     }))}
@@ -271,6 +281,7 @@ export const DevConsole: React.FC<DevConsoleProps> = ({
                     height={containerHeight}
                     outputRef={outputRef}
                 />
+                {modules.length > 0 && 
                 <ConsoleInput
                     input={input}
                     isFocused={isFocused}
@@ -284,7 +295,7 @@ export const DevConsole: React.FC<DevConsoleProps> = ({
                     onBlur={() => setTimeout(() => setIsFocused(false), 200)}
                     onAutocompleteSelect={handleAutocompleteSelect}
                     onAutocompleteEscape={() => setIsAutocompleteVisible(false)}
-                />
+                /> }
             </div>
         </div>
     );

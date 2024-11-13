@@ -1,8 +1,32 @@
-src
-.gitignore
+# Source and config files
+src/
+playground/
+*.config.js
+*.config.ts
 rollup.config.js
+vite.config.ts
 tsconfig.json
-.eslintrc.js
-jest.config.js
+postcss.config.js
+tailwind.config.js
+
+# Tests
 *.test.*
 *.spec.*
+
+# Development files
+.gitignore
+.git
+.github
+node_modules/
+.DS_Store
+.env*
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Yarn lock (using npm)
+yarn.lock
+# package-lock.json  # Uncomment if you prefer yarn.lock

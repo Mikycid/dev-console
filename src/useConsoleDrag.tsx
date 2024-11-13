@@ -5,7 +5,7 @@ export const useConsoleDrag = (
     consoleRef: RefObject<HTMLDivElement>,
     disableMove?: boolean
 ) => {
-    const [isMoveLocked, setIsMoveLocked] = useState(true);
+    const [isMoveLocked, setIsMoveLocked] = useState(false);
     const [isDragging, setIsDragging] = useState(false);
     const dragOffset = useRef({ x: 0, y: 0 });
 

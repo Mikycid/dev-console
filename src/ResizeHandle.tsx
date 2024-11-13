@@ -5,7 +5,7 @@ interface ResizeHandleProps {
     disabled?: boolean;
 }
 
-export const ResizeHandle: React.FC<ResizeHandleProps> = ({ onResizeStart, disabled }) => {
+export const ResizeHandle: React.FC<ResizeHandleProps> = ({ onResizeStart, disabled }: ResizeHandleProps) => {
     if (disabled) return null;
     
     return (

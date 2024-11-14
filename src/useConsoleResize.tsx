@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 interface Size {
     width: number;
@@ -12,10 +12,32 @@ interface Position {
 }
 
 export const useConsoleResize = (disableResize?: boolean) => {
-    const [size, setSize] = useState<Size>({ width: 384, height: 300 });
-    const [position, setPosition] = useState<Position>({ top: 0, left: 0 });
+    const [size, setSize] = useState<Size>({ width: 500, height: 300 });
+    const [position, setPosition] = useState<Position>(() => {
+        if (typeof window !== 'undefined') {
+            return {
+                top: window.innerHeight - 300 - 20,
+                left: window.innerWidth - 500 - 20
+            };
+        }
+        return { top: 0, left: 0 };
+    });
     const [isResizing, setIsResizing] = useState(false);
     const [resizeDirection, setResizeDirection] = useState<string | null>(null);
+    
+    // Update position when window resizes
+    useEffect(() => {
+        const handleWindowResize = () => {
+            setPosition(prev => ({
+                top: window.innerHeight - size.height - 20,
+                left: window.innerWidth - size.width - 20
+            }));
+        };
+
+        window.addEventListener('resize', handleWindowResize);
+        return () => window.removeEventListener('resize', handleWindowResize);
+    }, [size.width, size.height]);
+
     const resizeStartRef = useRef({
         x: 0,
         y: 0,
@@ -27,12 +49,9 @@ export const useConsoleResize = (disableResize?: boolean) => {
 
     const handleResize = (e: MouseEvent) => {
         if (!isResizing || !resizeDirection || disableResize) return;
-
         e.preventDefault();
-
         const deltaX = e.clientX - resizeStartRef.current.x;
         const deltaY = e.clientY - resizeStartRef.current.y;
-
         const newSize = { ...size };
         const newPosition = { ...position };
 
@@ -67,12 +86,10 @@ export const useConsoleResize = (disableResize?: boolean) => {
 
     const startResize = (direction: string) => (e: React.MouseEvent) => {
         if (disableResize) return;
-        
         e.preventDefault();
         e.stopPropagation();
         setIsResizing(true);
         setResizeDirection(direction);
-
         const rect = (e.currentTarget as HTMLElement).closest('.console-container')?.getBoundingClientRect();
         if (rect) {
             resizeStartRef.current = {

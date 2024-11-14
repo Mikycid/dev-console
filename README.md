@@ -31,13 +31,12 @@ If you use tailwind in your project, add this to your tailwind.config.js:
 ```js
 {
   content: [
-      './src/renderer/**/*.{js,jsx,ts,tsx,ejs}',
       './node_modules/@mikycid/dev-console/**/*.{js,jsx,ts,tsx,ejs}',
     ]
 }
 ```
 
-And set the injectTailwind to "true" in the component (defaults to false).
+And set the injectTailwind to "false" in the component (defaults to false).
 
 
 ## Features

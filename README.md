@@ -18,6 +18,7 @@ const App = () => {
       modules={[]}
       disableMove={false}
       disableResize={false}
+      disableMinimize={false}
       defaultLogLevel={LogLevel.INFO}
       showLogControls={true}
       injectTailwind={false}

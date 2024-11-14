@@ -25,7 +25,6 @@ export const useConsoleResize = (disableResize?: boolean) => {
     const [isResizing, setIsResizing] = useState(false);
     const [resizeDirection, setResizeDirection] = useState<string | null>(null);
     
-    // Update position when window resizes
     useEffect(() => {
         const handleWindowResize = () => {
             setPosition(prev => ({

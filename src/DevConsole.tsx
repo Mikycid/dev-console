@@ -10,12 +10,14 @@ import { ConsoleControls } from './ConsoleControls';
 import { useConsoleHistory } from './useConsoleHistory';
 import { useConsoleDrag } from './useConsoleDrag';
 import { useConsoleResize } from './useConsoleResize';
+import { useConsoleMinimize } from './useConsoleMinimize';
 import { Module } from './Interfaces/Module';
 
 interface DevConsoleProps {
     modules?: Module[];
     disableMove?: boolean;
     disableResize?: boolean;
+    disableMinimize?: boolean;
     defaultLogLevel?: LogLevel;
     showLogControls?: boolean;
     injectTailwind?: boolean;
@@ -38,11 +40,11 @@ const LOG_TYPE_TO_LEVEL: Record<LogType, LogLevel> = {
     log: LogLevel.INFO
 };
 
-
 export const DevConsole: React.FC<DevConsoleProps> = ({
     modules = [],
     disableMove = false,
     disableResize = false,
+    disableMinimize = false,
     defaultLogLevel = LogLevel.INFO,
     showLogControls = true,
     injectTailwind = true
@@ -68,16 +70,21 @@ export const DevConsole: React.FC<DevConsoleProps> = ({
     const resize = useConsoleResize(disableResize);
     const drag = useConsoleDrag(consoleRef, disableMove);
     const { history, addToHistory, navigateHistory } = useConsoleHistory();
+    const minimize = useConsoleMinimize({
+        position: resize.position,
+        setPosition: resize.setPosition,
+        size: resize.size,
+        disabled: disableMinimize
+    });
 
     useEffect(() => {
         if (!document.getElementById('tailwind-cdn') && injectTailwind) {
-          const script = document.createElement('script');
-          script.src = 'https://cdn.tailwindcss.com';
-          script.id = 'tailwind-cdn';
-          document.head.appendChild(script);
+            const script = document.createElement('script');
+            script.src = 'https://cdn.tailwindcss.com';
+            script.id = 'tailwind-cdn';
+            document.head.appendChild(script);
         }
-      }, []);
-    
+    }, []);
 
     useEffect(() => {
         initializeModules(modules);
@@ -244,13 +251,15 @@ export const DevConsole: React.FC<DevConsoleProps> = ({
                 top: 0,
                 left: 0,
                 width: `${resize.size.width}px`,
-                height: `${resize.size.height}px`,
+                height: `${minimize.effectiveHeight}px`,
                 transform: `translate3d(${resize.position.left}px, ${resize.position.top}px, 0)`,
                 willChange: 'transform',
-                transition: drag.isDragging || resize.isResizing ? 'none' : 'transform 0.1s ease',
+                transition: drag.isDragging || resize.isResizing ? 
+                    'none' : 
+                    'transform 0.3s ease, height 0.3s ease',
             }}
         >
-            {!disableResize && (
+            {!disableResize && !minimize.isMinimized && (
                 <ResizeHandle 
                     onResizeStart={resize.startResize}
                     disabled={disableResize}
@@ -261,44 +270,53 @@ export const DevConsole: React.FC<DevConsoleProps> = ({
                 onToggleMove={() => drag.setIsMoveLocked(!drag.isMoveLocked)}
                 isMoveLocked={drag.isMoveLocked}
                 disableMove={disableMove}
+                disableMinimize={disableMinimize}
                 onMouseDown={drag.startDrag}
                 isDragging={drag.isDragging}
+                isMinimized={minimize.isMinimized}
+                onToggleMinimize={minimize.handleToggleMinimize}
+                onClear={() => setAllLogs([])}  // Add this line
             />
 
-            {showLogControls && (
-                <ConsoleControls
-                    minimumLogLevel={minimumLogLevel}
-                    onLogLevelChange={setMinimumLogLevel}
-                    enabledLevels={enabledLevels}
-                    onToggleLevel={(level: LogLevel) => setEnabledLevels(prev => ({
-                        ...prev,
-                        [level]: !prev[level]
-                    }))}
-                />
-            )}
 
-            <div className="flex flex-col bg-gray-900 text-white flex-grow overflow-hidden">
-                <ConsoleOutput
-                    logs={filteredLogs}
-                    height={containerHeight}
-                    outputRef={outputRef}
-                />
-                {modules.length > 0 && 
-                <ConsoleInput
-                    input={input}
-                    isFocused={isFocused}
-                    inputRef={inputRef}
-                    modules={modules}
-                    position={resize.position}
-                    isAutocompleteVisible={isAutocompleteVisible}
-                    onInputChange={handleInputChange}
-                    onKeyDown={handleKeyDown}
-                    onFocus={() => setIsFocused(true)}
-                    onBlur={() => setTimeout(() => setIsFocused(false), 200)}
-                    onAutocompleteSelect={handleAutocompleteSelect}
-                    onAutocompleteEscape={() => setIsAutocompleteVisible(false)}
-                /> }
-            </div>
+            {!minimize.isMinimized && (
+                <>
+                    {showLogControls && (
+                        <ConsoleControls
+                            minimumLogLevel={minimumLogLevel}
+                            onLogLevelChange={setMinimumLogLevel}
+                            enabledLevels={enabledLevels}
+                            onToggleLevel={(level: LogLevel) => setEnabledLevels(prev => ({
+                                ...prev,
+                                [level]: !prev[level]
+                            }))}
+                        />
+                    )}
+
+                    <div className="flex flex-col bg-gray-900 text-white flex-grow overflow-hidden">
+                        <ConsoleOutput
+                            logs={filteredLogs}
+                            height={containerHeight}
+                            outputRef={outputRef}
+                        />
+                        {modules.length > 0 && 
+                        <ConsoleInput
+                            input={input}
+                            isFocused={isFocused}
+                            inputRef={inputRef}
+                            modules={modules}
+                            position={resize.position}
+                            isAutocompleteVisible={isAutocompleteVisible}
+                            onInputChange={handleInputChange}
+                            onKeyDown={handleKeyDown}
+                            onFocus={() => setIsFocused(true)}
+                            onBlur={() => setTimeout(() => setIsFocused(false), 200)}
+                            onAutocompleteSelect={handleAutocompleteSelect}
+                            onAutocompleteEscape={() => setIsAutocompleteVisible(false)}
+                        />}
+                    </div>
+                </>
+            )}
         </div>
     );
 };

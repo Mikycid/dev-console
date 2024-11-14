@@ -18,6 +18,7 @@ interface DevConsoleProps {
     disableResize?: boolean;
     defaultLogLevel?: LogLevel;
     showLogControls?: boolean;
+    injectTailwind?: boolean;
 }
 
 type LogType = 'debug' | 'info' | 'warn' | 'error' | 'log';
@@ -43,7 +44,8 @@ export const DevConsole: React.FC<DevConsoleProps> = ({
     disableMove = false,
     disableResize = false,
     defaultLogLevel = LogLevel.INFO,
-    showLogControls = true
+    showLogControls = true,
+    injectTailwind = true
 }) => {
     const consoleRef = useRef<HTMLDivElement>(null);
     const outputRef = useRef<HTMLDivElement>(null);
@@ -68,7 +70,7 @@ export const DevConsole: React.FC<DevConsoleProps> = ({
     const { history, addToHistory, navigateHistory } = useConsoleHistory();
 
     useEffect(() => {
-        if (!document.getElementById('tailwind-cdn')) {
+        if (!document.getElementById('tailwind-cdn') && injectTailwind) {
           const script = document.createElement('script');
           script.src = 'https://cdn.tailwindcss.com';
           script.id = 'tailwind-cdn';
@@ -236,7 +238,7 @@ export const DevConsole: React.FC<DevConsoleProps> = ({
     return (
         <div 
             ref={consoleRef}
-            className="fixed flex flex-col border border-gray-700 console-container"
+            className="fixed flex flex-col border border-gray-700 console-container z-50"
             style={{
                 position: 'fixed',
                 top: 0,

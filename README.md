@@ -37,7 +37,7 @@ If you use tailwind in your project, add this to your tailwind.config.js:
 }
 ```
 
-And set the injectTailwind to "false" in the component (defaults to false).
+And set the injectTailwind to "false" in the component (defaults to true).
 
 
 ## Features

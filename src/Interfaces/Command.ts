@@ -1,5 +1,4 @@
-
 export interface Command {
-    execute: (args: any[], addOutput: (message: string) => void) => void;
-    help: string;
+  execute: (args: string[], addOutput: (message: string) => void) => void;
+  help: string;
 }

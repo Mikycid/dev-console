@@ -1,7 +1,7 @@
-import { Command } from "./Command";
+import { Command } from './Command';
 
 export interface Module {
-    commands: Record<string, Command>;
-    name: string;
-    help: string;
+  commands: Record<string, Command>;
+  name: string;
+  help: string;
 }
